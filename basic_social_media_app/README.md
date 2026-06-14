@@ -196,19 +196,6 @@ function isLoggedIn(req, res, next) {
 - If **no token** is present → redirects to `/login`
 - If **token is valid** → decodes it and attaches `{ email }` to `req.user`, then calls `next()`
 
----
-
-## ⚙️ Configuration
-
-### MongoDB — `config/mongoose.js`
-
-Connects to a local MongoDB instance and exports the connection:
-
-```js
-mongoose.connect('mongodb://127.0.0.1:27017/socialDB');
-```
-
-The database name is **`socialDB`**.
 
 ---
 
@@ -306,11 +293,6 @@ http://localhost:8000
 
 **Recommended `.env` setup:**
 
-```env
-JWT_SECRET=your_super_secret_key_here
-MONGO_URI=mongodb://127.0.0.1:27017/socialDB
-PORT=8000
-```
 
 Then install `dotenv`:
 
