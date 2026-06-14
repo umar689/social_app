@@ -3,54 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>SocialSpark – Feed</title>
+    <meta name="description" content="Browse all posts on SocialSpark, your premium social media platform.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0d0d14; }
+        .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .post-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            transition: all 0.3s ease;
+        }
+        .post-card:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(139,92,246,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(139,92,246,0.1);
+        }
+        .nav-glass {
+            background: rgba(13,13,20,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(139,92,246,0.35);
+        }
+        .btn-ghost {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .btn-ghost:hover {
+            background: rgba(255,255,255,0.09);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .like-btn {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.2);
+            color: #f87171;
+            transition: all 0.3s ease;
+        }
+        .like-btn:hover {
+            background: rgba(239,68,68,0.2);
+            border-color: rgba(239,68,68,0.4);
+            transform: scale(1.05);
+        }
+        .delete-btn {
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.15);
+            color: #fc8181;
+            transition: all 0.3s ease;
+        }
+        .delete-btn:hover {
+            background: rgba(239,68,68,0.18);
+        }
+        .avatar-ring {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            padding: 2px;
+            border-radius: 50%;
+        }
+        .orb { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.07; pointer-events: none; z-index: 0; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp 0.5s ease-out both; }
+        .fade-up-delay-1 { animation: fadeUp 0.5s ease-out 0.1s both; }
+        .fade-up-delay-2 { animation: fadeUp 0.5s ease-out 0.2s both; }
+    </style>
 </head>
-<body>
-    <h1>Hi <%= username || 'Guest' %></h1>
-    <% if(flag===true) { %>
-    <form action="/profile" method="GET">
-        <input type="submit" value="VIEW MY PROFILE" >
-    </form>
-    <br><br>
-    <%if(allposts.length){%>
-        <h3>ALL POSTS</h3>
-        <hr>
-    <%}%>
-    
-    <% allposts.forEach((post) => { %>
-        <h3><b><i>created by <%= post.user.name %></i></b></h3>
-        <p><%= post.content %></p>
-        <a href="/like/<%=post._id%>">Like</a> : <%=post.likes.length%> 
-        <br><br>
-        <form method="POST" action="/deletepost/<%=post._id%>">
-            <input type="submit" value="Delete">
-        </form>
-        
-        <hr>
-    <% }) %>
-    <form action="/logout" method="GET">
-        <input type="submit" value="LOGOUT" >
-    </form>
-    
-    <% } else { %>
-    <%if(allposts.length){%>
-        <h3>ALL POSTS</h3>
-    <%}%>
-    
-    <% allposts.forEach((post) => { %>
-        <h3><b><i>created by <%= post.user.name %></i></b></h3>
-        <p><%= post.content %></p>
-    <% }) %>
-    <form action="/create" method="GET">
-        <input type="submit" value="SIGNUP" >
-    </form>
-    <br>
-    <br>
-    <form action="/login" method="GET">
-        <input type="submit" value="LOGIN" >
-    </form>
-    <% } %>
-    
+<body class="min-h-screen text-white">
 
+    <!-- Orbs -->
+    <div class="orb w-[600px] h-[600px] bg-purple-600 top-0 left-0"></div>
+    <div class="orb w-[400px] h-[400px] bg-pink-500 bottom-0 right-0"></div>
+
+    <!-- Navbar -->
+    <nav class="nav-glass sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                    </svg>
+                </div>
+                <span class="text-lg font-bold text-white">SocialSpark</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <% if(flag===true) { %>
+                    <span class="text-slate-400 text-sm hidden sm:block">Hi, <span class="text-purple-400 font-semibold"><%= username %></span></span>
+                    <a href="/profile" class="btn-ghost text-sm text-white font-medium px-4 py-2 rounded-xl inline-block">My Profile</a>
+                    <a href="/logout" class="text-slate-400 hover:text-red-400 text-sm font-medium transition-colors px-3 py-2 inline-block">Logout</a>
+                <% } else { %>
+                    <a href="/create" class="btn-ghost text-sm text-white font-medium px-4 py-2 rounded-xl inline-block">Sign Up</a>
+                    <a href="/login" class="btn-primary text-sm text-white font-semibold px-4 py-2 rounded-xl inline-block">Login</a>
+                <% } %>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 max-w-2xl mx-auto px-6 py-10">
+
+        <!-- Hero greeting -->
+        <div class="mb-8 fade-up">
+            <% if(flag===true) { %>
+                <h1 class="text-3xl font-bold text-white">Good to see you, <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"><%= username %></span> 👋</h1>
+                <p class="text-slate-400 mt-1 text-sm">Here's what's happening in your community</p>
+            <% } else { %>
+                <h1 class="text-3xl font-bold text-white">Explore <span class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">SocialSpark</span></h1>
+                <p class="text-slate-400 mt-1 text-sm">Sign in to like, post, and connect with others</p>
+            <% } %>
+        </div>
+
+        <!-- Posts Feed -->
+        <% if(allposts.length) { %>
+            <div class="space-y-5 fade-up-delay-1">
+                <h2 class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Latest Posts</h2>
+
+                <% allposts.forEach((post, i) => { %>
+                    <article class="post-card rounded-2xl p-6">
+                        <!-- Author -->
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="avatar-ring">
+                                <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background: linear-gradient(135deg, #1a1a2e, #2d2d4e)">
+                                    <%= post.user.name ? post.user.name[0].toUpperCase() : '?' %>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-white font-semibold text-sm"><%= post.user.name %></p>
+                                <p class="text-slate-500 text-xs">Community member</p>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <p class="text-slate-300 leading-relaxed text-sm mb-5"><%= post.content %></p>
+
+                        <!-- Actions -->
+                        <div class="flex items-center gap-3 flex-wrap">
+                            <% if(flag===true) { %>
+                                <a href="/like/<%= post._id %>" class="like-btn px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 no-underline">
+                                    ❤️ Like &nbsp;<span class="bg-red-500/20 px-2 py-0.5 rounded-full text-red-300"><%= post.likes.length %></span>
+                                </a>
+                                <form method="POST" action="/deletepost/<%= post._id %>" class="inline">
+                                    <button type="submit" class="delete-btn px-4 py-2 rounded-xl text-xs font-semibold">
+                                        🗑 Delete
+                                    </button>
+                                </form>
+                            <% } else { %>
+                                <span class="text-slate-500 text-xs flex items-center gap-1">❤️ <span><%= post.likes.length %></span> likes</span>
+                            <% } %>
+                        </div>
+                    </article>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="text-center py-20 fade-up-delay-2">
+                <div class="text-5xl mb-4">💬</div>
+                <p class="text-slate-400 font-medium">No posts yet.</p>
+                <% if(flag===true) { %>
+                    <p class="text-slate-600 text-sm mt-1">Be the first to post something!</p>
+                    <a href="/profile" class="btn-primary inline-block mt-4 px-6 py-2.5 rounded-xl text-sm font-semibold text-white no-underline">Create a Post</a>
+                <% } %>
+            </div>
+        <% } %>
+    </main>
 </body>
 </html>

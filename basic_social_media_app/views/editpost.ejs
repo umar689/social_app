@@ -3,14 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Edit Post – SocialSpark</title>
+    <meta name="description" content="Edit your post on SocialSpark.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0d0d14; }
+        .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .textarea-field {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #e2e8f0;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+        .textarea-field:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: rgba(139,92,246,0.06);
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+        }
+        .textarea-field::placeholder { color: #4a5568; }
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(139,92,246,0.4);
+        }
+        .btn-ghost {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.09); }
+        .orb { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.1; pointer-events: none; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp 0.5s ease-out both; }
+    </style>
 </head>
-<body>
-    <h1>EDIT</h1>
-    <form action="/updatepost/<%=post._id%>" method="POST">
-        <textarea rows="10" cols="40" name="content"><%=post.content%></textarea>
-        <br><br>
-        <input type="submit" value="EDIT">
-    </form>
+<body class="min-h-screen text-white flex items-center justify-center">
+
+    <div class="orb w-96 h-96 bg-purple-600 top-0 left-0"></div>
+    <div class="orb w-80 h-80 bg-blue-500 bottom-0 right-0"></div>
+
+    <div class="relative z-10 w-full max-w-lg px-6 py-10 fade-up">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-white">Edit Your Post</h1>
+            <p class="text-slate-400 text-sm mt-1">Make your changes and save them</p>
+        </div>
+
+        <div class="glass rounded-3xl p-8">
+            <form action="/updatepost/<%= post._id %>" method="POST" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Post Content</label>
+                    <textarea
+                        name="content"
+                        rows="7"
+                        class="textarea-field w-full rounded-2xl px-4 py-3 text-sm"
+                        placeholder="What's on your mind?"
+                    ><%= post.content %></textarea>
+                </div>
+                <div class="flex gap-3">
+                    <a href="/profile" class="btn-ghost flex-1 py-3 rounded-xl text-white font-medium text-sm text-center no-underline">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn-primary flex-1 py-3 rounded-xl text-white font-semibold text-sm">
+                        Save Changes ✦
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

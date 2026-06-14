@@ -3,17 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login – SocialSpark</title>
+    <meta name="description" content="Sign in to your SocialSpark account.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { inter: ['Inter', 'sans-serif'] },
+                    animation: {
+                        'fade-up': 'fadeUp 0.6s ease-out both',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } },
+                        fadeUp: { '0%': { opacity: 0, transform: 'translateY(24px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .input-field {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: rgba(139,92,246,0.08);
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+        }
+        .input-field::placeholder { color: #4a5568; }
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(139,92,246,0.4);
+        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+    </style>
 </head>
-<body>
-    <h1>LOG IN</h1>
-    <form action="/login" method="POST">
-        <input type="email" name="email" placeholder="enter email">
-        <br><br>
-        <input type="password" name="password" placeholder="enter password">
-        <br><br>
-        <input type="submit" value="Login">
-    </form>
+<body class="min-h-screen flex items-center justify-center overflow-hidden relative" style="background-color:#0d0d14">
 
+    <div class="orb w-96 h-96 bg-purple-600 top-[-10%] right-[-10%]"></div>
+    <div class="orb w-80 h-80 bg-pink-500 bottom-[-10%] left-[-5%]"></div>
+
+    <div class="relative z-10 w-full max-w-md px-6 py-10 animate-fade-up">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 animate-float" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">
+                <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-white tracking-tight">Welcome Back</h1>
+            <p class="text-slate-400 mt-2 text-sm">Sign in to continue to SocialSpark</p>
+        </div>
+
+        <div class="glass rounded-3xl p-8">
+            <form action="/login" method="POST" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Email Address</label>
+                    <input type="email" name="email" placeholder="john@example.com" required
+                        class="input-field w-full rounded-xl px-4 py-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required
+                        class="input-field w-full rounded-xl px-4 py-3 text-sm">
+                </div>
+                <button type="submit"
+                    class="btn-primary w-full py-3.5 rounded-xl text-white font-semibold text-sm tracking-wide mt-2">
+                    Sign In →
+                </button>
+            </form>
+        </div>
+
+        <p class="text-center text-slate-500 text-sm mt-6">
+            Don't have an account?
+            <a href="/create" class="text-purple-400 hover:text-purple-300 font-medium transition-colors ml-1">Sign Up</a>
+        </p>
+    </div>
 </body>
 </html>

@@ -3,15 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Upload Profile Picture – SocialSpark</title>
+    <meta name="description" content="Upload your profile picture on SocialSpark.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0d0d14; }
+        .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(139,92,246,0.4);
+        }
+        .btn-ghost {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.09); }
+        .upload-zone {
+            border: 2px dashed rgba(139,92,246,0.3);
+            background: rgba(139,92,246,0.04);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: rgba(139,92,246,0.6);
+            background: rgba(139,92,246,0.08);
+        }
+        .orb { position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.1; pointer-events: none; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp 0.5s ease-out both; }
+        #file-input { display: none; }
+        #preview-img { display: none; }
+    </style>
 </head>
-<body>
-    <h1>Upload Your Profile Picture</h1>
+<body class="min-h-screen text-white flex items-center justify-center">
 
-    <form action="/uploadpic" method="POST" enctype="multipart/form-data">
-        <input type="file" name="img">
-        <input type="submit" value="UPLOAD">
-    </form>
+    <div class="orb w-96 h-96 bg-purple-600 top-[-5%] right-[-5%]"></div>
+    <div class="orb w-80 h-80 bg-pink-500 bottom-[-5%] left-[-5%]"></div>
 
+    <div class="relative z-10 w-full max-w-md px-6 py-10 fade-up">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-white">Upload Profile Picture</h1>
+            <p class="text-slate-400 text-sm mt-1">Choose a photo to represent you</p>
+        </div>
+
+        <div class="glass rounded-3xl p-8">
+            <form action="/uploadpic" method="POST" enctype="multipart/form-data" class="space-y-5" id="upload-form">
+
+                <!-- Upload Zone -->
+                <div class="upload-zone rounded-2xl p-8 text-center" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                    <img id="preview-img" class="w-32 h-32 rounded-full object-cover mx-auto mb-4" alt="Preview">
+                    <div id="upload-placeholder">
+                        <div class="text-4xl mb-3">📸</div>
+                        <p class="text-slate-300 font-medium text-sm">Click to select a photo</p>
+                        <p class="text-slate-600 text-xs mt-1">JPG, PNG, WEBP up to 5MB</p>
+                    </div>
+                    <input type="file" name="img" id="file-input" accept="image/*" onchange="previewImage(this)" required>
+                </div>
+
+                <div id="file-name" class="text-xs text-slate-500 text-center hidden"></div>
+
+                <div class="flex gap-3">
+                    <a href="/profile" class="btn-ghost flex-1 py-3 rounded-xl text-white font-medium text-sm text-center no-underline">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn-primary flex-1 py-3 rounded-xl text-white font-semibold text-sm">
+                        Upload Photo ✦
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('preview-img');
+                    const placeholder = document.getElementById('upload-placeholder');
+                    const fileName = document.getElementById('file-name');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    fileName.textContent = '✓ ' + input.files[0].name;
+                    fileName.classList.remove('hidden');
+                    fileName.style.color = '#a78bfa';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Drag and drop
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const fileInput = document.getElementById('file-input');
+            fileInput.files = e.dataTransfer.files;
+            previewImage(fileInput);
+        });
+    </script>
 </body>
 </html>
