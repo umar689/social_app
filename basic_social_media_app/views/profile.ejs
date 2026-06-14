@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/" method="GET">
+        <input type="submit" value="BACK">
+    </form>
+    <h1>MY PROFILE</h1>
+    <div>
+        <img 
+            src="<%= user.profilepic %>" 
+            alt="Profile Picture"
+            style="
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                object-fit: cover;
+            "
+        >
+        <br>
+        <a href="/test">UPLOAD PIC</a>
+        <hr>
+    </div>
+    <p>NAME : <%=user.name%></p>
+    <p>EMAIL : <%=user.email%></p>
+    <p>AGE : <%=user.age%></p>
+    <form action="/createpost" method="POST">
+        <textarea rows="10" cols="40" name="content"></textarea>
+        <br><br>
+        <input type="submit" value="CREATE POST">
+    </form>
+    <hr>
+    <% user.post.forEach(function(post){ %>
+        <h3><b><i>created by <%=user.name%></i></b></h3>
+        <p><%=post.content%></p>
+        
+        <a href="/like/<%=post._id%>">Like</a> : <%=post.likes.length%> 
+        <br><br>
+        <form method="POST" action="/deletepost/<%=post._id%>">
+            <input type="submit" value="Delete">
+        </form>
+        <br>
+        <form action="/editpost/<%=post._id%>">
+            <input type="submit" value="edit">
+        </form>
+        <hr>
+
+    <% }) %>
+    
+</body>
+</html>

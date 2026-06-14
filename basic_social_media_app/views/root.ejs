@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hi <%= username || 'Guest' %></h1>
+    <% if(flag===true) { %>
+    <form action="/profile" method="GET">
+        <input type="submit" value="VIEW MY PROFILE" >
+    </form>
+    <br><br>
+    <%if(allposts.length){%>
+        <h3>ALL POSTS</h3>
+        <hr>
+    <%}%>
+    
+    <% allposts.forEach((post) => { %>
+        <h3><b><i>created by <%= post.user.name %></i></b></h3>
+        <p><%= post.content %></p>
+        <a href="/like/<%=post._id%>">Like</a> : <%=post.likes.length%> 
+        <br><br>
+        <form method="POST" action="/deletepost/<%=post._id%>">
+            <input type="submit" value="Delete">
+        </form>
+        
+        <hr>
+    <% }) %>
+    <form action="/logout" method="GET">
+        <input type="submit" value="LOGOUT" >
+    </form>
+    
+    <% } else { %>
+    <%if(allposts.length){%>
+        <h3>ALL POSTS</h3>
+    <%}%>
+    
+    <% allposts.forEach((post) => { %>
+        <h3><b><i>created by <%= post.user.name %></i></b></h3>
+        <p><%= post.content %></p>
+    <% }) %>
+    <form action="/create" method="GET">
+        <input type="submit" value="SIGNUP" >
+    </form>
+    <br>
+    <br>
+    <form action="/login" method="GET">
+        <input type="submit" value="LOGIN" >
+    </form>
+    <% } %>
+    
+
+</body>
+</html>
